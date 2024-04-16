@@ -21,10 +21,22 @@ app.get('/puppies', async (req, res, next) => {
 // STEP 1
 // Capture the name, ageYrs, breed, weightLbs, and microchipped attributes
 // from the body of the request.
-// Use these values to BUILD a new Puppy in the database.
+
 // Respond to the request by sending a success message
 app.post('/puppies/build', async (req, res, next) => {
     // Your code here
+    const { name, ageYrs, breed, weightLbs, microchipped } = req.body
+    // Use these values to BUILD a new Puppy in the database.
+    const newPuppy = Puppy.build({
+        name,
+        ageYrs,
+        breed,
+        weightLbs,
+        microchipped,
+    })
+    await newPuppy.save();
+    const puppy = await Puppy.findOne({ order: [['id', 'DESC']], where: { name, ageYrs, breed } });
+    res.json({ message: "Success" , data: puppy })
 })
 
 // STEP 2
@@ -34,6 +46,17 @@ app.post('/puppies/build', async (req, res, next) => {
 // Respond to the request by sending a success message
 app.post('/puppies/create', async (req, res, next) => {
     // Your code here
+    const { name, ageYrs, breed, weightLbs, microchipped } = req.body
+    // Use these values to BUILD a new Puppy in the database.
+    const newPuppy = await Puppy.create({
+        name,
+        ageYrs,
+        breed,
+        weightLbs,
+        microchipped,
+    })
+    const puppy = await Puppy.findOne({ order: [['id', 'DESC']], where: { name, ageYrs, breed } });
+    res.json({ message: "Success", data: puppy })
 })
 
 
